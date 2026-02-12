@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
     , captureSession(new QMediaCaptureSession(this))
     , audioInput(new QAudioInput(this))
     , mediaRecorder(new QMediaRecorder(this))
+    , mediaPlayer(new QMediaPlayer(this))       // tts 재생용
+    , audioOutput(new QAudioOutput(this))       // tts 재생용
 {
     ui->setupUi(this);
 
@@ -32,15 +34,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(networkManager, &QNetworkAccessManager::finished,
             this, &MainWindow::onNetworkReply);
 
-    // 녹음 버튼 연결 (추가!)
+    // 녹음 버튼 연결
     connect(ui->btnStartRecord, &QPushButton::clicked,
             this, &MainWindow::onStartRecord);
     connect(ui->btnStopRecord, &QPushButton::clicked,
             this, &MainWindow::onStopRecord);
 
-    // 오디오 녹음 설정 (추가!)
+    // 오디오 녹음 설정
     captureSession->setAudioInput(audioInput);
     captureSession->setRecorder(mediaRecorder);
+
+    // 오디오 출력 설정
+    mediaPlayer->setAudioOutput(audioOutput);
+    audioOutput->setVolume(1.0);  // 볼륨 최대
 
     // 초기 버튼 상태
     ui->btnStopRecord->setEnabled(false);
@@ -191,26 +197,49 @@ void MainWindow::onUploadFinished(QNetworkReply *reply)
 
         qDebug() << "파싱된 JSON:" << obj;
 
-        QString message = obj["message"].toString();
-        QString fileName = obj["file_name"].toString();
-        int fileSize = obj["file_size"].toInt();
-        QString transcription = obj["transcription"].toString();  // STT 결과!
+        QString userMessage = obj["user_message"].toString();  // STT 결과
+        QString aiResponse = obj["ai_response"].toString();    // ai 응답
+        QString ttsUrl = obj["tts_url"].toString();             // TTS URL
+
+        qDebug() << "사용자:" << userMessage;
+        qDebug() << "AI:" << aiResponse;
+        qDebug() << "TTS URL:" << ttsUrl;
+
+        // 대화 형식으로 표시
+        QString resultMsg = QString("👤 고객님:\n%1\n\n🤖 AI 도우미:\n%2\n\n🔊 음성으로 재생 중...")
+                                .arg(userMessage)
+                                .arg(aiResponse);
+
+        QMessageBox::information(this, "AI 키오스크", resultMsg);
+
+        // 파일 이름 & 사이즈는 확인했으므로 주석 처리 =======================
+        //
+        // QString fileName = obj["file_name"].toString();
+        // int fileSize = obj["file_size"].toInt();
 
         // 디버그: 개별 값 출력
-        qDebug() << "message:" << message;
-        qDebug() << "fileName:" << fileName;
-        qDebug() << "fileSize:" << fileSize;
-        qDebug() << "STT 결과:" << transcription;
+        // qDebug() << "message:" << message;
+        // qDebug() << "fileName:" << fileName;
+        // qDebug() << "fileSize:" << fileSize;
+        // qDebug() << "STT 결과:" << user_message;
+        // QString resultMsg = QString("%1\n파일명: %2\n크기: %3 bytes\n\n 음성인식 결과:\n「%4」")
+        //                         .arg(message,
+        //                              fileName,
+        //                              QString::number(fileSize),
+        //                              user_message.isEmpty() ? "인식 실패" : transcription);
+        // ================================================================
 
-        QString resultMsg = QString("%1\n파일명: %2\n크기: %3 bytes\n\n 음성인식 결과:\n「%4」")
-                                .arg(message,
-                                     fileName,
-                                     QString::number(fileSize),
-                                     transcription.isEmpty() ? "인식 실패" : transcription);
+        // TTS 음성 재생! (새로 추가!)
+        if (!ttsUrl.isEmpty()) {
+            QString fullUrl = "http://127.0.0.1:8000" + ttsUrl;
+            qDebug() << "TTS 재생:" << fullUrl;
 
-        QMessageBox::information(this, "업로드 성공", resultMsg);
+            mediaPlayer->setSource(QUrl(fullUrl));
+            mediaPlayer->play();
+        }
+
     } else {
-        QMessageBox::critical(this, "업로드 실패", reply->errorString());
+        QMessageBox::critical(this, "오류", reply->errorString());
     }
 
     reply->deleteLater();

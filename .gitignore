@@ -8,12 +8,15 @@ wheels/
 
 # Virtual environments
 .venv
+# env파일 제외
+.env
+
+# Djangto
+db.sqlite3
 
 # voices 파일 제외
 /media/voices/*.wav
-
-# env파일 제외
-.env
+/media/tts/*.mp3
 
 # Qt 
 *.txt.user

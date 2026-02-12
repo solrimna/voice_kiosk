@@ -8,5 +8,7 @@ dependencies = [
     "django>=6.0.2",
     "django-cors-headers>=4.9.0",
     "djangorestframework>=3.16.1",
+    "openai>=2.18.0",
     "pillow>=12.1.0",
+    "python-dotenv>=1.2.1",
 ]

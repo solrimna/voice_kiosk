@@ -8,3 +8,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# voices 파일 제외
+/media/voices/*.wav
+
+# env파일 제외
+.env

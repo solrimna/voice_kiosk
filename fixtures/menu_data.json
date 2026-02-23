@@ -1,0 +1,482 @@
+[
+  {
+    "model": "menu.menuitem",
+    "pk": 1,
+    "fields": {
+      "name": "아메리카노",
+      "price": 4500,
+      "description": "깊고 진한 에스프레소",
+      "is_caffeine": true,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "coffee",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 2,
+    "fields": {
+      "name": "아이스 아메리카노",
+      "price": 4500,
+      "description": "시원한 아이스 아메리카노",
+      "is_caffeine": true,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "coffee",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 3,
+    "fields": {
+      "name": "카푸치노",
+      "price": 5000,
+      "description": "풍성한 우유 거품",
+      "is_caffeine": true,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "coffee",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 4,
+    "fields": {
+      "name": "에스프레소",
+      "price": 3500,
+      "description": "진한 에스프레소 샷",
+      "is_caffeine": true,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "coffee",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 5,
+    "fields": {
+      "name": "디카페인 아메리카노",
+      "price": 5000,
+      "description": "카페인 없는 아메리카노",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "coffee",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 6,
+    "fields": {
+      "name": "카페라떼",
+      "price": 5000,
+      "description": "부드러운 우유와 에스프레소",
+      "is_caffeine": true,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 7,
+    "fields": {
+      "name": "아이스 카페라떼",
+      "price": 5000,
+      "description": "시원한 아이스 카페라떼",
+      "is_caffeine": true,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 8,
+    "fields": {
+      "name": "카라멜 마키아또",
+      "price": 5500,
+      "description": "달콤한 카라멜과 에스프레소",
+      "is_caffeine": true,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 9,
+    "fields": {
+      "name": "아이스 카라멜 마키아또",
+      "price": 5500,
+      "description": "시원한 카라멜 마키아또",
+      "is_caffeine": true,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 10,
+    "fields": {
+      "name": "바닐라라떼",
+      "price": 5500,
+      "description": "은은한 바닐라 향",
+      "is_caffeine": true,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 11,
+    "fields": {
+      "name": "아이스 바닐라라떼",
+      "price": 5500,
+      "description": "시원한 바닐라라떼",
+      "is_caffeine": true,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 12,
+    "fields": {
+      "name": "녹차라떼",
+      "price": 5500,
+      "description": "고소한 녹차라떼",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 13,
+    "fields": {
+      "name": "아이스 녹차라떼",
+      "price": 5500,
+      "description": "시원한 녹차라떼",
+      "is_caffeine": false,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 14,
+    "fields": {
+      "name": "초코라떼",
+      "price": 5500,
+      "description": "진한 초콜릿 라떼",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 15,
+    "fields": {
+      "name": "아이스 초코라떼",
+      "price": 5500,
+      "description": "시원한 초코라떼",
+      "is_caffeine": false,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "latte",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 16,
+    "fields": {
+      "name": "딸기 스무디",
+      "price": 6000,
+      "description": "상큼한 딸기 스무디",
+      "is_caffeine": false,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "smoothie",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 17,
+    "fields": {
+      "name": "망고 스무디",
+      "price": 6000,
+      "description": "달콤한 망고 스무디",
+      "is_caffeine": false,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "smoothie",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 18,
+    "fields": {
+      "name": "블루베리 스무디",
+      "price": 6000,
+      "description": "새콤달콤 블루베리 스무디",
+      "is_caffeine": false,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "smoothie",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 19,
+    "fields": {
+      "name": "페퍼민트티",
+      "price": 4500,
+      "description": "상쾌한 페퍼민트티",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "tea",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 20,
+    "fields": {
+      "name": "캐모마일티",
+      "price": 4500,
+      "description": "편안한 캐모마일티",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "tea",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 21,
+    "fields": {
+      "name": "얼그레이티",
+      "price": 4500,
+      "description": "향긋한 얼그레이티",
+      "is_caffeine": true,
+      "is_cold": false,
+      "is_hot": true,
+      "category": "tea",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 22,
+    "fields": {
+      "name": "아이스티",
+      "price": 4500,
+      "description": "시원한 아이스티",
+      "is_caffeine": true,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "tea",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 23,
+    "fields": {
+      "name": "플레인 크루아상",
+      "price": 3500,
+      "description": "버터 향 가득한 크루아상",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 24,
+    "fields": {
+      "name": "초코 크루아상",
+      "price": 4000,
+      "description": "달콤한 초콜릿 크루아상",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 25,
+    "fields": {
+      "name": "치즈케이크",
+      "price": 5500,
+      "description": "부드러운 뉴욕 치즈케이크",
+      "is_caffeine": false,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 26,
+    "fields": {
+      "name": "티라미수",
+      "price": 6000,
+      "description": "에스프레소 향 티라미수",
+      "is_caffeine": true,
+      "is_cold": true,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 27,
+    "fields": {
+      "name": "마들렌",
+      "price": 3000,
+      "description": "촉촉한 마들렌",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 28,
+    "fields": {
+      "name": "스콘",
+      "price": 3500,
+      "description": "바삭한 플레인 스콘",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 29,
+    "fields": {
+      "name": "브라우니",
+      "price": 4500,
+      "description": "진한 초콜릿 브라우니",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.menuitem",
+    "pk": 30,
+    "fields": {
+      "name": "쿠키",
+      "price": 2500,
+      "description": "바삭한 초코칩 쿠키",
+      "is_caffeine": false,
+      "is_cold": false,
+      "is_hot": false,
+      "category": "dessert",
+      "is_available": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]

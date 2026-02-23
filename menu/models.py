@@ -7,19 +7,19 @@ class MenuItem(models.Model):
     description = models.TextField(blank=True, verbose_name="설명")
     image = models.ImageField(upload_to='menu_images/', blank=True, null=True, verbose_name="이미지")
     
-    # 태그 (시니어 친화적 추천용)
-    is_spicy = models.BooleanField(default=False, verbose_name="매운맛")
-    is_cold = models.BooleanField(default=False, verbose_name="차가움")
-    is_hot = models.BooleanField(default=False, verbose_name="뜨거움")
+    # 태그 
+    is_hot = models.BooleanField(default=False, verbose_name="HOT 가능")
+    is_cold = models.BooleanField(default=False, verbose_name="ICE 가능")
+    is_caffeine = models.BooleanField(default=True, verbose_name="카페인 포함")
     
     category = models.CharField(
         max_length=20,
         choices=[
-            ('rice', '밥'),
-            ('noodle', '면'),
-            ('side', '사이드'),
-            ('drink', '음료'),
-            ('doll', '인형'),
+            ('coffee', '커피'),
+            ('latte', '라떼'),
+            ('smoothie', '스무디'),
+            ('tea', '티'),
+            ('dessert', '디저트'),
         ],
         verbose_name="카테고리"
     )

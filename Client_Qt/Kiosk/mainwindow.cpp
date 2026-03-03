@@ -40,6 +40,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnStopRecord, &QPushButton::clicked,
             this, &MainWindow::onStopRecord);
 
+    // Azure Speech 테스트 버튼 연결
+    connect(ui->btnTestAzure, &QPushButton::clicked,
+            this, &MainWindow::onTestAzureSpeech);
+
     // 오디오 녹음 설정
     captureSession->setAudioInput(audioInput);
     captureSession->setRecorder(mediaRecorder);
@@ -243,4 +247,110 @@ void MainWindow::onUploadFinished(QNetworkReply *reply)
     }
 
     reply->deleteLater();
+}
+
+void MainWindow::onTestAzureSpeech()
+{
+    using namespace Microsoft::CognitiveServices::Speech;
+    using namespace Microsoft::CognitiveServices::Speech::Audio;
+
+    qDebug() << "=== Azure Speech 테스트 시작 ===";
+
+    // 환경변수에서 API 키 가져오기
+    QString apiKey = qgetenv("AZURE_SPEECH_KEY");
+    QString region = qgetenv("AZURE_SPEECH_REGION");
+
+    // 환경변수 확인
+    if (apiKey.isEmpty() || region.isEmpty()) {
+        QMessageBox::critical(this, "환경변수 오류",
+                              "환경변수가 설정되지 않았습니다!\n\n"
+                              "필요한 환경변수:\n"
+                              "- AZURE_SPEECH_KEY\n"
+                              "- AZURE_SPEECH_REGION\n\n"
+                              "Qt Creator의 Projects → Run → Environment에서 설정하세요.");
+        return;
+    }
+
+    qDebug() << "API Key 확인: (길이:" << apiKey.length() << ")";
+    qDebug() << "Region:" << region;
+
+    try {
+        // Speech Config 생성
+        auto config = SpeechConfig::FromSubscription(
+            apiKey.toStdString(),
+            region.toStdString()
+            );
+
+        // 한국어 설정
+        config->SetSpeechRecognitionLanguage("ko-KR");
+
+        qDebug() << "Speech Config 생성 완료";
+
+        // 오디오 설정 (기본 마이크)
+        auto audioConfig = AudioConfig::FromDefaultMicrophoneInput();
+
+        qDebug() << "Audio Config 생성 완료";
+
+        // Speech Recognizer 생성
+        auto recognizer = SpeechRecognizer::FromConfig(config, audioConfig);
+
+        qDebug() << "Speech Recognizer 생성 완료";
+
+        // 사용자에게 안내
+        QMessageBox::information(this, "준비 완료",
+                                 "🎤 마이크가 준비되었습니다!\n\n"
+                                 "OK 버튼을 누르면 5초 안에 말씀하세요.\n\n"
+                                 "예시:\n"
+                                 "- 안녕하세요\n"
+                                 "- 아메리카노 주세요\n"
+                                 "- 테스트입니다");
+
+        qDebug() << "음성 인식 시작...";
+
+        // 음성 인식 (한 번, 5초 타임아웃, get() 결과가 올 때까지 대기)
+        auto result = recognizer->RecognizeOnceAsync().get();
+
+        qDebug() << "음성 인식 완료";
+
+        // 결과 처리
+        if (result->Reason == ResultReason::RecognizedSpeech) {
+            QString text = QString::fromStdString(result->Text);
+            qDebug() << "✅ 인식 성공:" << text;
+
+            QMessageBox::information(this, "인식 성공!",
+                                     QString("✅ 인식된 텍스트:\n\n「%1」\n\n"
+                                             "Azure Speech 연동 성공!").arg(text));
+        }
+        // 인식 실패(소음 또는 너무 작은 소리 일 때)
+        else if (result->Reason == ResultReason::NoMatch) {
+            qDebug() << "❌ 음성 인식 실패";
+
+            QMessageBox::warning(this, "인식 실패",
+                                 "음성을 인식하지 못했습니다.\n\n"
+                                 "다시 시도해주세요.\n"
+                                 "마이크가 제대로 연결되어 있는지 확인하세요.");
+        }
+        // 오류 (API키 틀림, 네트워크 문제 etc...)
+        else if (result->Reason == ResultReason::Canceled) {
+            auto cancellation = CancellationDetails::FromResult(result);
+            QString errorDetails = QString::fromStdString(cancellation->ErrorDetails);
+
+            qDebug() << "❌ 취소됨:" << errorDetails;
+
+            QMessageBox::critical(this, "오류 발생",
+                                  QString("음성 인식이 취소되었습니다.\n\n"
+                                          "오류: %1\n\n"
+                                          "API 키와 지역(Region)을 확인하세요.").arg(errorDetails));
+        }
+
+    }
+    catch (const std::exception& e) {
+        QString error = QString::fromStdString(e.what());
+        qDebug() << "❌ 예외 발생:" << error;
+
+        QMessageBox::critical(this, "예외 발생",
+                              QString("예외가 발생했습니다:\n\n%1").arg(error));
+    }
+
+    qDebug() << "=== Azure Speech 테스트 종료 ===";
 }

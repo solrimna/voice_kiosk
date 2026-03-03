@@ -10,6 +10,10 @@
 #include <QHttpMultiPart>           // 파일 전송을 위해 추가
 #include <QMediaPlayer>             // 파일 재생을 위해 추가
 #include <QAudioOutput>             // 파일 재생을 위해 추가
+#include <QMessageBox>              // 메시지 박스용
+#include <QDebug>                   // 디버그 출력용
+
+#include <speechapi_cxx.h>          // Azure Speech SDK 추가!
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -35,6 +39,9 @@ private slots:
 
     // 파일 업로드용
     void onUploadFinished(QNetworkReply *reply);
+
+    // Azure Speech 테스트 슬롯
+    void onTestAzureSpeech();
 
 private:
     Ui::MainWindow *ui;

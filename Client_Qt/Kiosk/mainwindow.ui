@@ -6,52 +6,53 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>317</width>
-    <height>191</height>
+    <width>222</width>
+    <height>224</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>20</y>
-      <width>141</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>음성 주문 시작</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnStartRecord">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>100</y>
-      <width>75</width>
-      <height>24</height>
+      <y>10</y>
+      <width>161</width>
+      <height>151</height>
      </rect>
     </property>
-    <property name="text">
-     <string>녹음 시작</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnStopRecord">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>100</y>
-      <width>75</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>녹음 중지</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>메뉴 조회</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnStartRecord">
+       <property name="text">
+        <string>녹음 시작</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnStopRecord">
+       <property name="text">
+        <string>녹음 중지</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnTestAzure">
+       <property name="text">
+        <string>Azure Speech 테스트</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -59,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>317</width>
+     <width>222</width>
      <height>22</height>
     </rect>
    </property>

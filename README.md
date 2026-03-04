@@ -5,110 +5,137 @@
 ## 📋 프로젝트 개요
 
 **목표:** 시니어가 쉽게 사용할 수 있는 음성 AI 카페 키오스크  
-**기간:** 미완 / 계속 진행 중
+**기간:** 2026.02 ~ 2026.03 (진행 중)  
 
 **차별화:**
-- 🎤 완전한 음성 인터페이스 (STT + AI + TTS)
-- 🧠 대화 메모리 (이전 대화 기억)
-- 🛠️ Function Calling (AI가 직접 주문 처리)
-- 👴 시니어 친화적 UX
+- ⚡ **실시간 음성 인식** (1-2초 응답)
+- 🧠 **대화 메모리** (이전 대화 기억)
+- 🛠️ **Function Calling** (AI가 직접 주문 처리)
+- 👴 **시니어 친화적 UX** (큰 글씨, 명확한 피드백)
+---
+
+## 🎥 데모
+
+### 실시간 음성 주문 (1-2초 응답!)
+
+![실시간 음성 인식 데모](demo/realtime-stt-input.gif)
+
+*말하는 동안 화면에 실시간으로 텍스트가 표시됩니다*
+
+![주문 결과 음성 답변](demo/realtime-stt-output.gif)
+
+### Function Calling 자동 주문
+
+![자동 주문 처리](demo/function-calling-order.gif)
+
+*기억한 대화 메모리로 AI가 자동으로 메뉴 검색하고 주문을 생성합니다*
 
 ---
-## 🚀 현재 동작 플로우
+
+## ✅ 완료된 기능
+
+### ✨ Stage 1: 기본 음성 시스템 (완료)
+- ✅ Qt C++ 프론트엔드
+- ✅ Django REST API 백엔드
+- ✅ OpenAI Whisper STT (배치)
+- ✅ OpenAI GPT-4o-mini + Function Calling
+- ✅ OpenAI TTS
+- ✅ 대화 메모리
+- ✅ 30개 카페 메뉴 DB
+
+### ⚡ Stage 2: 실시간 STT (완료!)
+- ✅ Azure Speech SDK C++ 통합
+- ✅ 실시간 연속 음성 인식
+- ✅ 중간 결과 실시간 표시
+- ✅ 자동 문장 끝 감지
+- ✅ Qt ↔ Django 실시간 연동
+- ✅ **응답 시간: 7-10초 → 1-2초 (5배 개선!)** ⚡
+
+---
+---
+## 🚀 변경된 동작 플로우(실시간)
 ```
-👤 사용자: "아메리카노 2잔 주세요" (음성)
+👤 사용자: "아메리카노 2잔 주세요" (말하기 시작)
+    ↓ (0.3초)
+📱 화면: "아메" (실시간 표시 - 회색)
+    ↓ (0.3초)
+📱 화면: "아메리카노" (업데이트)
+    ↓ (0.3초)
+📱 화면: "아메리카노 2잔 주세요" (최종 확정 - 검정)
     ↓
-🎤 [Qt] 녹음 (WAV 파일)
+🎤 [Azure Speech] 자동 문장 끝 감지
     ↓
-📤 [Qt → Django] 파일 업로드
-    ↓
-🎧 [Whisper STT] "아메리카노 2잔 주세요" (텍스트 변환)
+📤 [Qt → Django] 텍스트 전송
     ↓
 🧠 [OpenAI GPT-4o-mini + Function Calling]
     - 대화 히스토리 참조 💾
-    - 도구 판단: create_order 필요
+    - create_order("아메리카노", 2) 실행 🔧
     ↓
-🔧 [create_order 도구 실행]
-    - 메뉴 DB 검색
-    - 주문 DB 저장
-    - 결과 반환: {"success": true, "total_price": 9000}
+💾 [Django DB] 주문 저장
     ↓
-🧠 [GPT-4o-mini] 
-    - 도구 결과 해석
-    - 응답 생성: "아메리카노 2잔 주문 완료! 9,000원입니다."
+🧠 [GPT-4o-mini] "아메리카노 2잔 주문 완료! 9,000원입니다."
     ↓
-🔊 [OpenAI TTS] MP3 파일 생성
+🔊 [OpenAI TTS] MP3 생성
     ↓
 📥 [Django → Qt] TTS URL 전달
     ↓
 🔉 [Qt] 음성 재생
     ↓
 👂 사용자: AI 음성 듣기!
+
 ```
 ---
-**Last Updated:** 2026.02.23
-## 🔧 추가 예정 기능
 
-### Stage 2: Azure Speech (실시간 STT)
-```
-현재 방식: 녹음 완료 → 전송 → 처리 (7-10초)
-수정 예정: 말하는 중 → 실시간 진행 (1-2초)
-```
+## 🎬 사용 시나리오
 
-**계획:**
-- Azure Speech SDK (C++ 네이티브)
-- WebSocket 실시간 스트리밍
-- 음성 파형 시각화
-- 자동 음성 감지 (버튼 불필요)
-
-### UI/UX 개선
-- [ ] 메뉴 이미지 표시
-- [ ] 주문 내역 리스트
-- [ ] 로딩 애니메이션
-- [ ] 에러 처리 강화
-
----
-
-## 🎬 데모 시나리오
-
-### 시나리오 1: 메뉴 검색 (Function Calling)
+### 시나리오 1: 실시간 메뉴 검색
 ```
 사용자: "차가운 거 있어요?"
+화면 (실시간): "차가" → "차가운" → "차가운 거 있어요?"
 
 AI 동작:
   1. search_menu(is_cold=True) 도구 호출 🔧
-  2. 차가운 음료 목록 받음
-  3. "아이스 아메리카노, 아이스 카페라떼... 있습니다!"
+  2. 차가운 음료 목록 반환
+  3. "아이스 아메리카노, 아이스 카페라떼, 스무디가 있습니다!"
+
+응답 시간: 1.5초
 ```
 
-### 시나리오 2: 주문 생성 (Function Calling)
+### 시나리오 2: 실시간 주문 생성
 ```
 사용자: "아메리카노 2잔 주세요"
+화면 (실시간): "아메" → "아메리카노" → "아메리카노 2잔 주세요"
 
 AI 동작:
-  1. create_order(menu_name="아메리카노", quantity=2) 호출 🔧
-  2. DB에 주문 저장
+  1. create_order("아메리카노", 2) 호출 🔧
+  2. DB에 주문 저장 (Order 테이블)
   3. "아메리카노 2잔 주문 완료! 총 9,000원입니다!"
+
+응답 시간: 1.2초
 ```
 
 ### 시나리오 3: 연속 대화 (메모리)
 ```
-첫 번째:
+대화 1:
 사용자: "뭐 있어요?"
 AI: "아메리카노, 카페라떼, 카푸치노 등 있습니다."
 
-두 번째:
+대화 2:
 사용자: "아메리카노 주세요"
 AI: "아메리카노 1잔 주문하시겠어요?" (이전 대화 기억!)
+
+대화 3:
+사용자: "네"
+AI: "주문 완료! 4,500원입니다."
 ```
 
-### 시나리오 4: 주문 조회 (Function Calling)
+### 시나리오 4: 주문 조회
 ```
 사용자: "내가 뭐 주문했지?"
 
 AI 동작:
   1. get_recent_orders() 도구 호출 🔧
-  2. 최근 주문 내역 조회
+  2. DB에서 최근 주문 조회
   3. "아메리카노 2잔 주문하셨습니다!"
 ```
 
@@ -122,6 +149,7 @@ AI 동작:
 - **Qt Network** - HTTP 통신
 - **QMediaPlayer** - TTS 음성 재생
 - **MinGW 13.1.0** - C++ 컴파일러
+- **Azure Speech SDK (C++)** - 실시간 STT ⭐ NEW
 
 ### Backend (Django Python)
 - **Django 5.1** - 웹 프레임워크
@@ -130,10 +158,11 @@ AI 동작:
 - **CORS Headers** - 크로스 오리진 처리
 
 ### AI/ML
-- **OpenAI Whisper** - STT (음성→텍스트)
+- ~~**OpenAI Whisper**~~ - STT (음성→텍스트) - Azure 사용으로 전환
 - **OpenAI GPT-4o-mini** - AI 대화 + Function Calling
 - **OpenAI TTS** - 음성 합성 (텍스트→음성)
 - ~~**LangChain 1.2.10**~~ - OpenAI 네이티브로 전환
+- **Azure Speech Services** - 실시간 STT (ko-KR) ⭐ NEW
 
 ### 인프라
 - **python-dotenv** - 환경 변수 관리
@@ -147,11 +176,12 @@ AI 동작:
 
 ### Python (Django)
 ```bash
-Django==5.1
-djangorestframework==3.14.0
-django-cors-headers==4.3.1
-openai==1.12.0
+Django==6.0.2
+djangorestframework==3.16.1
+django-cors-headers==4.9.0
+openai==2.18.0
 python-dotenv==1.0.0
+azure-cognitiveservices-speech==1.48.2
 ```
 
 **제거된 라이브러리:**
@@ -161,11 +191,47 @@ python-dotenv==1.0.0
 
 **이유:** LangChain 1.x에서 AgentExecutor 제거됨 → OpenAI Function Calling 직접 사용
 
+### C++ (Qt)
+```cmake
+# Azure Speech SDK
+D:\Libs\SpeechSDK\
+├── include\cxx_api\
+├── include\c_api\
+├── lib\x64\Microsoft.CognitiveServices.Speech.core.lib
+└── bin\x64\Microsoft.CognitiveServices.Speech.core.dll
+```
+
 ---
 
 ## 🎯 핵심 기능
 
-### 1. Function Calling (도구 사용)
+### 1. 실시간 음성 인식 (Azure Speech) ⭐
+
+**특징:**
+- 말하는 동안 실시간으로 텍스트 표시
+- 중간 결과 (회색) → 최종 결과 (검정)
+- 자동 문장 끝 감지
+- 한국어 최적화 (ko-KR)
+
+**구현:**
+```cpp
+// Qt C++ - 연속 음성 인식
+azureRecognizer->Recognizing.Connect([this](const auto& e) {
+    QString text = QString::fromStdString(e.Result->Text);
+    // 중간 결과 실시간 표시 (회색)
+    onRecognizingText(text);
+});
+
+azureRecognizer->Recognized.Connect([this](const auto& e) {
+    QString text = QString::fromStdString(e.Result->Text);
+    // 최종 결과 누적 (검정)
+    onRecognizedText(text);
+});
+
+azureRecognizer->StartContinuousRecognitionAsync();
+```
+---
+### 2. Function Calling (도구 사용)
 **AI가 스스로 판단해서 함수 실행!**
 
 **정의된 도구:**
@@ -194,17 +260,17 @@ TOOLS = [
 ]
 ```
 
-### 2. 대화 메모리
+### 3. 대화 메모리
 **이전 대화 기억!**
 ```python
-# OpenAI 네이티브 메모리 (간단!)
+# OpenAI 네이티브 메모리 
 conversation_history = []
 
 conversation_history.append({"role": "user", "content": "뭐 있어요?"})
 conversation_history.append({"role": "assistant", "content": "물냉면..."})
 ```
 
-### 3. 30개 카페 메뉴 DB
+### 4. 30개 카페 메뉴 DB
 **fixtures로 한 번에 로드!**
 ```bash
 python manage.py loaddata fixtures/menu_data.json
@@ -214,35 +280,40 @@ python manage.py loaddata fixtures/menu_data.json
 
 ## 📂 프로젝트 구조
 ```
-KioskBackend/                   # Django 백엔드
-├── fixtures/
-│   └── menu_data.json         # 30개 카페 메뉴 데이터
-├── kiosk_server/
-│   ├── settings.py            # Django 설정
-│   └── urls.py
-├── menu/
-│   ├── models.py              # MenuItem 모델
-│   └── admin.py
-├── order/
-│   ├── models.py              # Order 모델
-│   └── admin.py
-├── voice/
-│   ├── views.py               # OpenAI Function Calling
-│   └── tools.py               # 도구 함수들
-├── media/
-│   ├── voices/                # 녹음 파일
-│   └── tts/                   # TTS 음성 파일
-├── .env                       # API 키 (Git 제외!)
-├── .gitignore
-└── requirements.txt
-
-Kiosk_Step1/                    # Qt 프론트엔드
-├── CMakeLists.txt
-├── main.cpp
-├── mainwindow.h
-├── mainwindow.cpp
-└── mainwindow.ui
+Kiosk_BackEnd_step1/
+│
+├── KioskBackend/              # Django 백엔드
+│   ├── fixtures/
+│   │   └── menu_data.json    # 30개 메뉴
+│   ├── kiosk_server/
+│   │   ├── settings.py
+│   │   └── urls.py
+│   ├── menu/
+│   │   ├── models.py         # MenuItem
+│   │   └── admin.py
+│   ├── order/
+│   │   ├── models.py         # Order
+│   │   └── admin.py
+│   ├── voice/
+│   │   ├── views.py          # API (upload, process_text)
+│   │   ├── tools.py          # Function Calling 도구
+│   │   └── urls.py
+│   ├── media/
+│   │   ├── voices/           # 녹음 파일 (Stage 1)
+│   │   └── tts/              # TTS 음성
+│   ├── .env                  # API 키
+│   ├── uv.lock
+│   └── pyproject.toml
+│
+└── Client_Qt/
+    └── Kiosk/                # Qt 프론트엔드
+        ├── CMakeLists.txt    # Azure SDK 설정
+        ├── main.cpp
+        ├── mainwindow.h      # Azure 헤더
+        ├── mainwindow.cpp    # 실시간 인식 구현
+        └── mainwindow.ui     # UI (QTextEdit, QLabel)
 ```
+
 
 ---
 
@@ -250,7 +321,6 @@ Kiosk_Step1/                    # Qt 프론트엔드
 
 ### 1. Django 백엔드 실행
 ```bash
-cd KioskBackend
 
 # 가상환경 활성화
 .venv\Scripts\activate  # Windows
@@ -265,17 +335,32 @@ OPENAI_API_KEY=sk-proj-your-key-here
 # 마이그레이션
 python manage.py migrate
 
-# 관리자 계정 생성
-python manage.py createsuperuser
-
 # 메뉴 데이터 로드
 python manage.py loaddata fixtures/menu_data.json
 
 # 서버 실행
 python manage.py runserver
 ```
+---
 
-### 2. Qt 프론트엔드 실행
+### 2. Azure Speech 설정
+
+**Azure Portal:**
+1. https://portal.azure.com 접속
+2. Speech Services 리소스 생성
+3. 키 및 엔드포인트 복사
+
+**Qt Creator 환경변수 설정:**
+```
+Projects → Run → Environment
+
+AZURE_SPEECH_KEY=your-azure-key
+AZURE_SPEECH_REGION=koreacentral
+```
+
+---
+
+### 3. Qt 프론트엔드 실행
 ```
 1. Qt Creator 실행
 2. CMakeLists.txt 열기
@@ -283,12 +368,13 @@ python manage.py runserver
 4. Ctrl+R (빌드 & 실행)
 ```
 
-### 3. 테스트
+### 4. 테스트
 ```
-1. "녹음 시작" 클릭
-2. "아메리카노 주세요" 말하기
-3. "녹음 중지" 클릭
-4. AI 음성 응답 듣기!
+1. "🎤 음성으로 주문하기" 버튼 클릭
+2. "아메리카노 2잔 주세요" 등 주문 관련 말하기
+3. 실시간으로 화면에 표시되는 거 확인!
+4. "⏹️ 중지" 클릭
+5. AI 응답 & TTS 재생 듣기!
 ```
 
 ---
@@ -296,8 +382,13 @@ python manage.py runserver
 ## 📊 API 엔드포인트
 ```
 POST /api/voice/upload/
-  - 음성 파일 업로드
-  - STT → AI 대화 → TTS
+  - 음성 파일 업로드 (Stage 1 - Whisper)
+  - STT → AI → TTS
+  - 응답: {user_message, ai_response, tts_url}
+
+POST /api/voice/process_text/
+  - 텍스트 직접 처리 (Stage 2 - Azure) ⭐ NEW
+  - 실시간 STT 결과 수신
   - 응답: {user_message, ai_response, tts_url}
 
 GET /api/menu/items/
@@ -321,6 +412,12 @@ POST /admin/
 - **LangChain 1.x 문제:** AgentExecutor 제거됨
 - **해결:** OpenAI Function Calling 직접 사용
 - **특강 스타일:** 도구 정의 + 함수 구현 + 라우터 분리
+
+### Azure Speech SDK 통합(2026.03.04)
+- C++ 네이티브 SDK 사용
+- 연속 음성 인식 (StartContinuousRecognitionAsync)
+- 이벤트 핸들러 (Recognizing, Recognized, Canceled)
+
 ---
 
 ## 💡 참고 자료
@@ -337,4 +434,11 @@ POST /admin/
 **Django:**
 - Django REST Framework: https://www.django-rest-framework.org/
 
----
+**Azure:**
+- Azure Speech: https://learn.microsoft.com/azure/ai-services/speech-service/
+- Speech SDK (C++): https://learn.microsoft.com/azure/ai-services/speech-service/quickstarts/setup-platform
+
+
+## 📝 라이선스
+
+개인 포트폴리오 프로젝트

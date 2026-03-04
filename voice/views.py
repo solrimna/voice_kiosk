@@ -346,3 +346,53 @@ def chat_with_tools(user_input: str) -> str:
     print(f"  [누적 메시지: {len(conversation_history)}개]")
     
     return reply
+
+
+@api_view(['POST'])
+def process_text(request):
+    """
+    텍스트를 직접 받아서 처리 (STT 없이)
+    Azure 실시간 STT에서 텍스트만 전송받을 때 사용
+    """
+    
+    print(f"\n{'='*50}")
+    print("📝 텍스트 직접 처리 시작")
+    
+    # 텍스트 가져오기
+    user_message = request.data.get('text', '')
+    
+    if not user_message:
+        return Response(
+            {'error': '텍스트가 없습니다.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    print(f"👤 사용자: {user_message}")
+    
+    try:
+        # AI 대화 처리 
+        ai_response = chat_with_tools(user_message)
+        print(f"🤖 AI: {ai_response}")
+        
+        # TTS 
+        tts_file_path = call_openai_tts(ai_response)
+        print(f"🔊 TTS 파일 생성: {tts_file_path}")
+        print(f"{'='*50}\n")
+        
+        # 음성 파일 URL 생성
+        tts_file_name = os.path.basename(tts_file_path)
+        tts_url = f"/media/tts/{tts_file_name}"
+        
+        return Response({
+            'message': '처리 완료',
+            'user_message': user_message,
+            'ai_response': ai_response,
+            'tts_url': tts_url
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        print(f"❌ 오류: {str(e)}")
+        traceback.print_exc()
+        return Response({
+            'error': f'처리 실패: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

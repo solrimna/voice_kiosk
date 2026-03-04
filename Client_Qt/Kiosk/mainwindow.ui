@@ -6,42 +6,73 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>222</width>
-    <height>224</height>
+    <width>696</width>
+    <height>669</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>10</y>
-      <width>161</width>
+      <x>240</x>
+      <y>440</y>
+      <width>185</width>
       <height>151</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>메뉴 조회</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="btnStartRecord">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 12pt;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #27ae60;
+}
+QPushButton:pressed {
+    background-color: #229954;
+}</string>
+       </property>
        <property name="text">
-        <string>녹음 시작</string>
+        <string>🎤 음성으로 주문하기</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btnStopRecord">
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 12pt;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #c0392b;
+}</string>
+       </property>
        <property name="text">
-        <string>녹음 중지</string>
+        <string>⏹️ 중지</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>메뉴 조회</string>
        </property>
       </widget>
      </item>
@@ -54,13 +85,77 @@
      </item>
     </layout>
    </widget>
+   <widget class="QTextEdit" name="textEditRealtime">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>40</y>
+      <width>471</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTextEdit {
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14pt;
+    background-color: #ecf0f1;
+}</string>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="placeholderText">
+     <string>말씀하세요 🎤</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelStatus">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>380</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel {
+    color: #2c3e50;
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 5px;
+}</string>
+    </property>
+    <property name="text">
+     <string>상태: 대기 중</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>222</width>
+     <width>696</width>
      <height>22</height>
     </rect>
    </property>

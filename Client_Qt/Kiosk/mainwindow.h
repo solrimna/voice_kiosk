@@ -14,6 +14,8 @@
 #include <QDebug>                   // 디버그 출력용
 
 #include <speechapi_cxx.h>          // Azure Speech SDK 추가!
+#include <QTimer>                   // 타이머용
+#include <memory>                   // std::shared_ptr용
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,14 +36,18 @@ private slots:
     void onNetworkReply(QNetworkReply *reply);
 
     // 녹음 관련 슬롯 추가!
-    void onStartRecord();
-    void onStopRecord();
+    void onStartRecord();                           // Azure 실시간으로 변경 예정!
+    void onStopRecord();                            // Azure 중지로 변경 예정!
 
     // 파일 업로드용
     void onUploadFinished(QNetworkReply *reply);
 
     // Azure Speech 테스트 슬롯
     void onTestAzureSpeech();
+
+    void onRecognizingText(const QString& text);    // 중간 결과 (실시간)
+    void onRecognizedText(const QString& text);     // 최종 결과
+    void onRecognitionError(const QString& error);  // 에러 처리
 
 private:
     Ui::MainWindow *ui;
@@ -60,5 +66,12 @@ private:
     // TTS 재생하기위해 추가
     QMediaPlayer *mediaPlayer;
     QAudioOutput *audioOutput;
+
+    // ─── Azure Speech 실시간 인식 관련 ──────────────────────────
+    std::shared_ptr<Microsoft::CognitiveServices::Speech::SpeechRecognizer> azureRecognizer;
+    bool isRecognizing;                             // 중복 실행 방지용 / 현재 인식 중인지
+    QString recognizedText;                         // 누적된 최종 텍스트
+
+    void sendTextToDjango(const QString& text);     // 최종 텍스트를 Django로 전송
 };
 #endif // MAINWINDOW_H

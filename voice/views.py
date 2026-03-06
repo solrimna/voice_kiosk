@@ -184,7 +184,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "search_menu",
-            "description": "카페 메뉴를 검색합니다.",
+            "description": "메뉴를 검색합니다. 결과는 간결하게 이름만 나열하세요.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -243,23 +243,44 @@ SYSTEM_PROMPT = """
 - create_order: 주문 생성 (메뉴명, 수량)
 - get_recent_orders: 최근 주문 조회
 
+**주문 처리:**
+- 주문 의도 파악 → 즉시 create_order 도구 호출
+- 재확인 최소화
+- 수량 없으면 1개
+
+**메뉴 검색 응답 규칙:**
+- **번호 매기기 금지** (1. 2. 3. 사용 금지)
+- 메뉴 이름만 쉼표로 나열
+- 가격 정보 생략 (물어보면 말하기)
+- 최대 5개까지만 언급
+- 예시: "아이스 아메리카노, 아이스 카페라떼, 아이스 카라멜 마키아또 있습니다"
+
 **대화 원칙:**
-1. "뭐가 맛있어요?", "추천해줘요" → 위 메뉴에서 2-3개 구체적으로 추천
+1. "뭐가 맛있어요?", "추천해줘요" → 메뉴에서 2-3개 구체적으로 추천
 2. "따뜻한 거", "달지 않은 거" 등 선호도 언급 시 → 해당 옵션 고려하여 안내
-3. "주세요", "할게요" 등 주문 의사 명확할 때만 → create_order 도구로 주문 확정
-4. 옵션 선택 필요 시 (hot/ice 등) → 친절하게 여쭤보기
-5. 주문 완료 전 반드시 내용 한 번 확인
-6. 메뉴/주문과 무관한 질문 → "죄송합니다, 주문 관련 내용만 도와드릴 수 있어요. 직원을 불러드릴까요?"
-7. 메뉴 검색이 필요하면 search_menu 도구 사용
-8. 고객이 명확히 주문하면 create_order 도구로 즉시 처리
-9. 주문 내역 질문 시 get_recent_orders 도구 사용
-10. 도구 사용 결과를 자연스럽게 전달
+3. 옵션 선택 필요 시 (hot/ice 등) → 친절하게 여쭤보기
+4. 메뉴/주문과 무관한 질문 → "죄송합니다, 주문 관련 내용만 도와드릴 수 있어요. 직원을 불러드릴까요?"
+5. 메뉴 검색이 필요하면 search_menu 도구 사용
+6. 고객이 명확히 주문하면 create_order 도구로 즉시 처리
+7. 주문 내역 질문 시 get_recent_orders 도구 사용
+8. 도구 사용 결과를 자연스럽게 전달
          
 **응답 스타일:**
-- 짧고 명확하게 (2-3문장)
-- 가격 정보 포함
-- 이모티콘 사용 금지
+- 짧고 명확하게 (TTS 음성으로 들음)
+- 한 응답당 2-3문장 이내, 한 문장 최대 30자 이내
+- 불필요한 설명 생략
+- 이모티콘, 이모지 사용 금지
 - 존댓말, 부드러운 말투
+
+**예시:**
+사용자: "아메리카노 2잔 주세요"
+AI: (create_order 도구 즉시 호출) → "아메리카노 2잔 주문 완료! 9,000원입니다."
+
+사용자: "카페라떼"
+AI: (create_order 도구 즉시 호출) → "카페라떼 1잔 주문 완료! 5,000원입니다."
+
+사용자: "차가운 거 뭐 있어요?"
+AI: "아이스 아메리카노, 아이스 라떼, 스무디 있습니다."
 """
 
 def execute_tool(tool_name: str, tool_args: dict) -> str:
@@ -300,7 +321,7 @@ def chat_with_tools(user_input: str) -> str:
     
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        temperature=0.7,
+        temperature=0.3,
         messages=messages,
         tools=TOOLS,
         tool_choice="auto"
@@ -333,7 +354,7 @@ def chat_with_tools(user_input: str) -> str:
         # 최종 응답 생성
         final_response = client.chat.completions.create(
             model="gpt-4o-mini",
-            temperature=0.7,
+            temperature=0.3,
             messages=[{"role": "system", "content": SYSTEM_PROMPT}] + conversation_history
         )
         

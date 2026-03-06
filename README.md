@@ -51,6 +51,13 @@
 - ✅ Qt ↔ Django 실시간 연동
 - ✅ **응답 시간: 7-10초 → 1-2초 (5배 개선!)** ⚡
 
+### 🚀 Stage 2-A: FastAPI 백엔드 (완료!)
+- ✅ Django → FastAPI 마이그레이션
+- ✅ 비동기 처리 (async/await)
+- ✅ Dependencies & Yield 패턴
+- ✅ 자동 API 문서 (Swagger UI)
+- ✅ Pydantic 자동 검증
+- ✅ **TTS 응답: 15초 → 3초 (5배 개선!)** ⚡
 ---
 ---
 ## 🚀 변경된 동작 플로우(실시간)
@@ -149,13 +156,16 @@ AI 동작:
 - **Qt Network** - HTTP 통신
 - **QMediaPlayer** - TTS 음성 재생
 - **MinGW 13.1.0** - C++ 컴파일러
-- **Azure Speech SDK (C++)** - 실시간 STT ⭐ NEW
+- **Azure Speech SDK (C++)** - 실시간 STT
 
-### Backend (Django Python)
-- **Django 5.1** - 웹 프레임워크
-- **Django REST Framework** - REST API
+### Backend (~~Django~~ FastAPI Python) 
+- **FastAPI** - 비동기 웹 프레임워크 ⭐ NEW
+- **Uvicorn** - ASGI 서버 ⭐ NEW
+- ~~**Django 5.1**~~ - 웹 프레임워크 (레거시, 병행 가능)
+- **Django ORM** - 데이터베이스 (하이브리드 방식)
+- **Pydantic** - 자동 데이터 검증 ⭐ NEW
 - **SQLite** - 데이터베이스
-- **CORS Headers** - 크로스 오리진 처리
+- **CORS** - 크로스 오리진 처리
 
 ### AI/ML
 - ~~**OpenAI Whisper**~~ - STT (음성→텍스트) - Azure 사용으로 전환
@@ -174,21 +184,29 @@ AI 동작:
 
 ## 📦 주요 라이브러리
 
-### Python (Django)
+### Python (~~Django~~ FastAPI)
 ```bash
+# FastAPI 
+fastapi=0.135.1             ⭐
+uvicorn[standard]=0.41.0    ⭐      
+
+# Django ORM (데이터베이스만)
 Django==6.0.2
 djangorestframework==3.16.1
 django-cors-headers==4.9.0
-openai==2.18.0
-python-dotenv==1.0.0
+
+# AI/ML
+openai==2.18.0                      : OpenAI API 사용을 위한 추가
 azure-cognitiveservices-speech==1.48.2
+
+# 기타
+python-dotenv==1.0.0                : .env사용을 위해 추가
 ```
 
 **제거된 라이브러리:**
-- ~~langchain==1.2.10~~ (OpenAI 네이티브로 전환)
-- ~~langchain-openai==0.2.14~~
-- ~~langchain-community==0.3.15~~
-
+- ~~langchain==1.2.10~~(OpenAI 네이티브로 전환)     : langchain 뼈대
+- ~~langchain-openai==0.2.14~~                  : langchain에 openai 연결하기 위한 추가 
+- ~~langchain-community==0.3.15~~               : langchain 확장 도구
 **이유:** LangChain 1.x에서 AgentExecutor 제거됨 → OpenAI Function Calling 직접 사용
 
 ### C++ (Qt)
@@ -276,13 +294,20 @@ conversation_history.append({"role": "assistant", "content": "물냉면..."})
 python manage.py loaddata fixtures/menu_data.json
 ```
 
+### 5. FastAPI 백엔드 아키텍처 ⭐ NEW
+- 비동기 처리로 빠른 응답 추구
+- 자동 API 문서 (Swagger UI)
+- 로깅 추가 - Dependencies & Yield 패턴
+- Django ORM 하이브리드 방식
+
 ---
 
 ## 📂 프로젝트 구조
 ```
 Kiosk_BackEnd_step1/
 │
-├── KioskBackend/              # Django 백엔드
+├── main.py                    # FastAPI 서버 ⭐ NEW
+├── KioskBackend/              # Django (ORM만 사용)
 │   ├── fixtures/
 │   │   └── menu_data.json    # 30개 메뉴
 │   ├── kiosk_server/
@@ -297,21 +322,23 @@ Kiosk_BackEnd_step1/
 │   ├── voice/
 │   │   ├── views.py          # API (upload, process_text)
 │   │   ├── tools.py          # Function Calling 도구
-│   │   └── urls.py
+│   │   └── urls.py           # (레거시)
 │   ├── media/
-│   │   ├── voices/           # 녹음 파일 (Stage 1)
+│   │   ├── voices/           # 녹음 파일 
 │   │   └── tts/              # TTS 음성
 │   ├── .env                  # API 키
 │   ├── uv.lock
 │   └── pyproject.toml
 │
-└── Client_Qt/
-    └── Kiosk/                # Qt 프론트엔드
-        ├── CMakeLists.txt    # Azure SDK 설정
-        ├── main.cpp
-        ├── mainwindow.h      # Azure 헤더
-        ├── mainwindow.cpp    # 실시간 인식 구현
-        └── mainwindow.ui     # UI (QTextEdit, QLabel)
+├── Client_Qt/
+│   └── Kiosk/                # Qt 프론트엔드
+│       ├── CMakeLists.txt    # Azure SDK 설정
+│       ├── main.cpp
+│       ├── mainwindow.h      # Azure 헤더
+│       ├── mainwindow.cpp    # 실시간 인식 구현
+│       └── mainwindow.ui     # UI (QTextEdit, QLabel)
+└── docs/                      # 문서
+    └── TIL/                   # 학습 기록
 ```
 
 
@@ -319,26 +346,55 @@ Kiosk_BackEnd_step1/
 
 ## 🚀 실행 방법
 
-### 1. Django 백엔드 실행
+### 1. ~~Django~~ FastAPI 백엔드 실행
+
+**가상환경 활성화:**
 ```bash
+# Windows
+.venv\Scripts\activate
 
-# 가상환경 활성화
-.venv\Scripts\activate  # Windows
-source .venv/bin/activate  # Mac/Linux
+# Mac/Linux
+source .venv/bin/activate
+```
 
-# 패키지 설치
+**패키지 설치:**
+*uv 사용*
+```bash
+uv sync
+```
+*pip 사용:*
+```bash
 pip install -r requirements.txt
+```
 
-# .env 파일 생성
+**.env 파일 생성:**
+```bash
 OPENAI_API_KEY=sk-proj-your-key-here
+AZURE_SPEECH_KEY=your-azure-key
+AZURE_SPEECH_REGION=koreacentral
+```
 
+**DB 초기화:**
+```bash
 # 마이그레이션
 python manage.py migrate
 
 # 메뉴 데이터 로드
 python manage.py loaddata fixtures/menu_data.json
+```
 
-# 서버 실행
+**서버 실행:**
+```bash
+uvicorn main:app --reload
+```
+
+**자동 API 문서:**
+- Swagger UI: http://127.0.0.1:8000/docs
+- ReDoc: http://127.0.0.1:8000/redoc
+
+**Django (레거시):**
+```bash
+# 필요시 Django 서버도 사용 가능
 python manage.py runserver
 ```
 ---
@@ -380,22 +436,39 @@ AZURE_SPEECH_REGION=koreacentral
 ---
 
 ## 📊 API 엔드포인트
+**FastAPI (현재):**
+```
+GET  /
+  - API 정보 및 상태
+
+POST /api/voice/process_text/
+  - 텍스트 직접 처리 (Azure 실시간 STT)
+  - 요청: {text: "아메리카노 주세요"}
+  - 응답: {user_message, ai_response, tts_url}
+  - 자동 로깅 & 검증
+
+GET  /api/menu/items/
+  - 메뉴 목록 조회
+
+GET  /health
+  - 헬스 체크
+
+GET  /docs
+  - Swagger UI (자동 API 문서) ⭐
+
+GET  /redoc
+  - ReDoc (대안 문서)
+```
+**Django (레거시):**
 ```
 POST /api/voice/upload/
-  - 음성 파일 업로드 (Stage 1 - Whisper)
+  - ~~현재 사용 안 함~~ (Azure로 전환)
+  - 음성 파일 업로드 (- Whisper)
   - STT → AI → TTS
   - 응답: {user_message, ai_response, tts_url}
 
-POST /api/voice/process_text/
-  - 텍스트 직접 처리 (Stage 2 - Azure) ⭐ NEW
-  - 실시간 STT 결과 수신
-  - 응답: {user_message, ai_response, tts_url}
-
-GET /api/menu/items/
-  - 메뉴 목록 조회
-
 POST /admin/
-  - Django 관리자 페이지
+  - Django 관리자 페이지 (DB 관리용)
 ```
 
 ---
@@ -418,6 +491,11 @@ POST /admin/
 - 연속 음성 인식 (StartContinuousRecognitionAsync)
 - 이벤트 핸들러 (Recognizing, Recognized, Canceled)
 
+### FastAPI 강의 적용 (2026.03.06)
+- **Django → FastAPI 전환** (하이브리드 방식)
+- **비동기 프로그래밍** (async/await, sync_to_async)
+- **Dependencies & Yield 패턴** (요청 로깅)
+- **Pydantic 자동 검증** (타입 안전)
 ---
 
 ## 💡 참고 자료
@@ -438,6 +516,11 @@ POST /admin/
 - Azure Speech: https://learn.microsoft.com/azure/ai-services/speech-service/
 - Speech SDK (C++): https://learn.microsoft.com/azure/ai-services/speech-service/quickstarts/setup-platform
 
+**FastAPI:**
+- FastAPI 공식: https://fastapi.tiangolo.com/
+- Uvicorn: https://www.uvicorn.org/
+- Pydantic: https://docs.pydantic.dev/
+- Dependencies: https://fastapi.tiangolo.com/tutorial/dependencies/
 
 ## 📝 라이선스
 
